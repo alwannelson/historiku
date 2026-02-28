@@ -15,7 +15,21 @@ app.use(express.static(path.join(__dirname, './src/Apps/public')))
 
 app.use('/', route)
 app.use('/', (req, res) => {
-    res.status(404).render('404')
+    const url = req.url
+    const mode = process.env.MODE
+    let urlMessage = ''
+    
+    if (mode === 'production') {
+        urlMessage = `https://historiku.my.id${url}`
+    } else {
+        urlMessage = `http://localhost:3000${url}`
+    }
+
+    res.status(404).render('errors/404', {
+        title: '404 | Not Found',
+        layout: 'layouts/main-layout',
+        urlMessage
+    })
 })
 
 const port = 3000
