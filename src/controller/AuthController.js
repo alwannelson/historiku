@@ -1,5 +1,6 @@
 const db = require('../config/db')
 require('dotenv').config()
+let msg = ''
 
 exports.getIsMe = (req, res) => {
     res.status(200).render('auth/token', {
@@ -37,7 +38,8 @@ exports.postIsMe = async (req, res) => {
             return res.status(400).redirect('/is_me')
         }
     } catch (error) {
-        console.log(error)
+        msg = error
+        return res.redirect('/woi')
     }
 }
 
@@ -53,4 +55,12 @@ exports.getMe = (req, res) => {
 exports.getExit = (req, res) => {
     req.session.destroy()
     res.status(200).redirect('/')
+}
+
+exports.getWoi = (req, res) => {
+    res.status(200).render('auth/woi', {
+        title: 'msg',
+        layout: 'layouts/main-layout',
+        msg
+    })
 }
