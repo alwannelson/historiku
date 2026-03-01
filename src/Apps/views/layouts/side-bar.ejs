@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="css/sidebar.style.css">
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<button class="sidebar-toggle" id="sidebarToggle">
+  <span class="material-symbols-outlined">menu</span>
+</button>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 col-lg-2">
+      <div class="sidebar-wrapper" id="sidebarWrapper">
+        <div class="card sidebar-card shadow-sm border-0">
+          <div class="card-body text-center bg-light">
+            <div class="rounded-circle bg-dark text-white d-inline-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px; font-size: 24px;">
+              <%= ownerName ? ownerName.charAt(0) : 'U' %>
+            </div>
+            <h6 class="fw-bold"><%= ownerName || 'User' %></h6>
+          </div>
+          <div class="list-group list-group-flush" id="sidebarMenu">
+            <a href="/threads" class="list-group-item list-group-item-action border-0 py-3 sidebar-link">
+              <span class="material-symbols-outlined me-2 align-middle">forum</span>
+              Threads
+            </a>
+            <a href="/achievements" class="list-group-item list-group-item-action border-0 py-3 sidebar-link">
+              <span class="material-symbols-outlined me-2 align-middle">military_tech</span>
+              Achievements
+            </a>
+            <a href="/skills" class="list-group-item list-group-item-action border-0 py-3 sidebar-link">
+              <span class="material-symbols-outlined me-2 align-middle">code</span>
+              Skills
+            </a>
+            <a href="/journey" class="list-group-item list-group-item-action border-0 py-3 sidebar-link">
+              <span class="material-symbols-outlined me-2 align-middle">timeline</span>
+              Journey
+            </a>
+            <a href="/about" class="list-group-item list-group-item-action border-0 py-3 sidebar-link">
+              <span class="material-symbols-outlined me-2 align-middle">account_circle</span>
+              About
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9 col-lg-10">
+      <div class="d-flex flex-column">
+        <div class="alert alert-dark mt-3" role="alert">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>
+              <span class="material-symbols-outlined align-middle me-2">waving_hand</span>
+              Hi, <%= ownerName || 'User' %>
+            </span>
+            <a href="/exit" class="btn btn-outline-danger btn-sm">
+              <span class="material-symbols-outlined align-middle me-1">logout</span>
+              Exit
+            </a>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <%- body %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/sidebar.script.js"></script>

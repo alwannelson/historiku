@@ -1,10 +1,16 @@
 const express = require('express')
 const route = express.Router()
 const MainController = require('../controller/MainController')
+const AuthController = require('../controller/AuthController')
 const controller = {
-    MainController
+    MainController,
+    AuthController
 }
 
 route.get('/', controller.MainController.getHome)
+route.get('/is_me', controller.AuthController.getIsMe)
+route.post('/is_me', controller.AuthController.postIsMe)
+route.get('/me', controller.AuthController.checkToken, controller.AuthController.getMe)
+route.get('/exit', controller.AuthController.getExit)
 
 module.exports = route

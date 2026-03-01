@@ -4,13 +4,22 @@ const expressLayouts = require('express-ejs-layouts')
 const path = require('path')
 const route = require('./src/routes/router.js')
 require('dotenv').config()
+const session = require('express-session')
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, './src/Apps/views'))
 
 app.use(expressLayouts)
 app.use(express.json())
-app.use(express.urlencoded({ extended: true}))
+app.use(express.urlencoded({ extended: true }))
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 3600000
+    }
+}))
 app.use(express.static(path.join(__dirname, './src/Apps/public')))
 
 app.use('/', route)
@@ -18,7 +27,7 @@ app.use('/', (req, res) => {
     const url = req.url
     const mode = process.env.MODE
     let urlMessage = ''
-    
+
     if (mode === 'production') {
         urlMessage = `https://historiku.my.id${url}`
     } else {
