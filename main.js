@@ -5,6 +5,8 @@ const path = require('path')
 const route = require('./src/routes/router.js')
 require('dotenv').config()
 const session = require('express-session')
+const flash = require('express-flash')
+const cookieParser = require('cookie-parser')
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, './src/Apps/views'))
@@ -20,8 +22,10 @@ app.use(session({
         maxAge: 3600000
     }
 }))
+app.use(cookieParser('secret-key'))
 app.use(express.static(path.join(__dirname, './src/Apps/public')))
-
+app.use
+app.use(flash())
 app.use('/', route)
 app.use('/', (req, res) => {
     const url = req.url

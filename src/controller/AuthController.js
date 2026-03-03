@@ -21,22 +21,38 @@ exports.postIsMe = async (req, res) => {
             'SELECT * FROM tbl_token WHERE token = ? AND is_active = true',
             [token]
         )
-    
+
+        if (!token) {
+            req.flash('error', 'PIN harus diisi')
+            return res.status(400).redirect('/is_me')
+        }
+
+        if (isNaN(token)) {
+            req.flash('error', 'PIN harus angka')
+            return res.status(400).redirect('/is_me')
+        }
+
+        if (token.length < 6) {
+            req.flash('error', 'PIN harus 6 angka')
+            return res.status(400).redirect('/is_me')
+        }
+
         if (rows.length > 0) {
             req.session.login = true,
-            req.session.tokenId = rows[0].id_token,
-            req.session.tokenDesc = rows[0].description_token,
-            req.session.ownerName = rows[0].owner_name
-    
+                req.session.tokenId = rows[0].id_token,
+                req.session.tokenDesc = rows[0].description_token,
+                req.session.ownerName = rows[0].owner_name
+
             await db.execute(
                 'UPDATE tbl_token SET last_used = NOW() WHERE id_token = ?',
                 [rows[0].id_token]
             )
-    
             res.status(200).redirect('/me')
         } else {
+            req.flash('error', 'PIN salah')
             return res.status(400).redirect('/is_me')
         }
+
     } catch (error) {
         msg = error
         return res.redirect('/woi')

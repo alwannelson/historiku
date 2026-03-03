@@ -1,6 +1,6 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-3 mt-5">
       <div class="card shadow bg-form">
         <div class="card-header bg-secondary text-white text-center">
           <h4 class="mb-0">Masukkan PIN</h4>
@@ -8,9 +8,12 @@
         <div class="card-body">
           <form action="/is_me" method="POST">
             <div class="mb-3">
-              <input type="text" class="form-control bg-form" id="token" name="token" placeholder="PIN anda" required>
+              <input type="text" class="form-control bg-form text-center" id="token" name="token" placeholder="6 Digit" >
+              <p class="text-danger"><%= messages.error %></p>
             </div>
-            <button type="submit" class="btn btn-outline-secondary w-100">Submit</button>
+            <div class="text-center">
+              <button type="submit" class="btn btn-sm btn-outline-secondary w-50 center">Submit</button>
+            </div>
           </form>
         </div>
       </div>
