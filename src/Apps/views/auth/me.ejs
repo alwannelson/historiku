@@ -1,1 +1,141 @@
-<h5>this content is not availble</h5>
+<!-- Tambahkan container dan row untuk layout grid -->
+<div class="container">
+  <div class="row g-4">
+    <!-- g-4 untuk gutter (jarak antar card) -->
+    <!-- Card 1 -->
+    <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="card icon-border-card h-100">
+        <div class="card-body position-relative">
+          <span class="material-symbols-outlined border-icon">menu_book</span>
+          <h5 class="card-title ps-5">Add Logbook</h5>
+          <p class="card-text ps-5">Ada hal menarik hari ini?</p>
+          <div class="text-center button">
+            <a href="/me/logs/new" class="btn btn-sm mt-2">Go</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="card icon-border-card h-100">
+        <div class="card-body position-relative">
+          <span class="material-symbols-outlined border-icon">military_tech</span>
+          <h5 class="card-title ps-5">Add Achievement</h5>
+          <p class="card-text ps-5">Dapat sertifikat baru kah?</p>
+          <div class="text-center button">
+            <a href="#" class="btn btn-sm mt-2">Go</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="card icon-border-card h-100">
+        <div class="card-body position-relative">
+          <span class="material-symbols-outlined border-icon">code</span>
+          <h5 class="card-title ps-5">Add Skill</h5>
+          <p class="card-text ps-5">Punya keahlian baru ya?</p>
+          <div class="text-center button">
+            <a href="#" class="btn btn-sm mt-2">Go</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hover-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  .hover-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15) !important;
+    border-color: transparent;
+  }
+
+  .hover-card:hover .card-img-top {
+    transform: scale(1.03);
+    transition: transform 0.5s ease;
+  }
+
+  .card-img-top {
+    transition: transform 0.5s ease;
+  }
+
+  /* Efek untuk link di dalam card */
+  .hover-card .btn {
+    transition: all 0.3s ease;
+  }
+
+  .hover-card:hover .btn {
+    background-color: #000;
+    border-color: #000;
+    color: white;
+  }
+
+  .icon-border-card {
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .icon-border-card:hover {
+    border-color: #2b2d42;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  }
+
+  .border-icon {
+    position: absolute;
+    top: 20px;
+    left: 5px;
+    font-size: 3rem !important;
+    color: #2b2d42;
+    opacity: 0.3;
+    transition: all 0.6s ease;
+  }
+
+  .icon-border-card:hover .border-icon {
+    opacity: 1;
+    transform: scale(1.1) rotate(360deg);
+  }
+
+  /* Efek geser ke kanan untuk title dan text */
+  .icon-border-card .card-title,
+  .icon-border-card .card-text {
+    transition: transform 0.4s ease;
+  }
+
+  .icon-border-card:hover .card-title {
+    transform: translateX(20px);
+  }
+
+  .icon-border-card:hover .card-text {
+    transform: translateX(20px);
+    transition-delay: 0.1s;
+  }
+
+  /* ===== BUTTON HITAM SAAT HOVER CARD ===== */
+  .icon-border-card .btn {
+    transition: all 0.3s ease;
+    background-color: transparent;
+    border: 2px solid #000;
+    color: #000;
+    font-weight: 500;
+  }
+
+  .icon-border-card:hover .btn {
+    background-color: #000 !important;
+    border-color: #000 !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+</style>

@@ -1,0 +1,85 @@
+/* Simple Card Styles */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.kartu {
+  transition: all 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  height: 100%;
+}
+
+.kartu:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+  border-color: #0d6efd;
+}
+
+.card-bodies {
+  background-color: #aacddc;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.card-bodies:hover {
+  background-color: #81a6c6;
+}
+
+.card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  /* Jumlah baris */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Optional: set height to match line-height */
+  line-height: 1.5;
+  /* Fallback untuk browser non-webkit */
+  max-height: calc(1.5em * 1);
+}
+
+.card-text {
+  line-height: 1.5;
+  color: #212529;
+  flex-grow: 1;
+}
+
+.border-top {
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.btn-outline-danger {
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.material-symbols-outlined {
+  vertical-align: middle;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-bodies {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+  }
+
+  .card-text {
+    font-size: 0.85rem;
+  }
+}

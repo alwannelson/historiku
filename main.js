@@ -24,19 +24,22 @@ app.use(session({
 }))
 app.use(cookieParser('secret-key'))
 app.use(express.static(path.join(__dirname, './src/Apps/public')))
-app.use
+app.use((req, res, next) => {
+    res.locals.ownerName = req.session.ownerName || null;
+    res.locals.tokenDesc = req.session.tokenDesc || null;
+    res.locals.amountLogs = req.session.amountLogs || null;
+    res.locals.login = req.session.login || false;
+    res.locals.user = req.session.user ? req.session.user : null;
+
+    next();
+});
 app.use(flash())
 app.use('/', route)
 app.use('/', (req, res) => {
     const url = req.url
-    const mode = process.env.MODE
-    let urlMessage = ''
-
-    if (mode === 'production') {
-        urlMessage = `https://historiku.my.id${url}`
-    } else {
-        urlMessage = `http://localhost:3000${url}`
-    }
+    const MODE = process.env.MODE
+    const APP_URL = process.env.APP_URL
+    let urlMessage = `${APP_URL}${url}` || null
 
     res.status(404).render('errors/404', {
         title: '404 | Not Found',

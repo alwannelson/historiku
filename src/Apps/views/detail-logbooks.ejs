@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="col">
+    <h1 class="text-center">
+      <%= result.title_log %>
+    </h1>
+    <p class="mt-4">
+      <%= new Date(result.posted_at).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  year: 'numeric' 
+        }) %>
+    </p>
+    <hr>
+    <div class="fs-5 mt-4 text-justify">
+      <%- result.body_log %>
+    </div>
+  </div>
+  <div class="mt-5">
+    <hr>
+    <b style="cursor: pointer;"><%= result.tags %></b>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="css/logs.style.css">
+
+<div class="row g-4">
+  <% row.forEach(function(log) { %>
+  <div class="col-lg-4 col-md-6">
+    <a href="/logbooks/<%= log.slug_log %>" class="card-link">
+      <div class="card kartu h-100 shadow-sm">
+        <div class="card-bodies">
+          <!-- Title -->
+          <h6 class="card-title fw-bold mb-2">
+            <% 
+                const title = log.title_log;
+                const shortTitle = title.length > 40 ? title.substring(0, 40) + '...' : title;
+              %>
+            <%= shortTitle %>
+          </h6>
+
+          <!-- Tags -->
+          <% if (log.tags) { %>
+          <div class="mb-2">
+            <span class="badge bg-secondary">
+              <% 
+                    const tags = log.tags;
+                    const shortTags = tags.length > 30 ? tags.substring(0, 30) + '...' : tags;
+                  %>
+              <%= shortTags %>
+            </span>
+          </div>
+          <% } %>
+
+          <!-- Body Preview -->
+          <p class="card-text small text-dark mb-3">
+            <% 
+                const cleanBody = log.body_log.replace(/<[^>]*>/g, '');
+                const shortBody = cleanBody.length > 70 ? cleanBody.substring(0, 70) + '...' : cleanBody;
+              %>
+            <%= shortBody %>
+          </p>
+
+          <!-- Footer -->
+          <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+            <small class="text-dark">
+              <%= new Date(log.posted_at).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  year: 'numeric' 
+                }) %>
+            </small>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <% }) %>
+</div>
+<style>
+  .card-bodies {
+    background-color: #FCF8F8;
+  }
+
+  .card-bodies:hover {
+    background-color: #FCF8F8;
+  }
+</style>

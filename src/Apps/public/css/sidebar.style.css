@@ -1,107 +1,149 @@
 .sidebar-wrapper {
-    position: fixed;
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  z-index: 1050;
+  border-radius: 10px;
+  transition: left 0.3s ease-in-out;
+}
+
+.sidebar-wrapper.show {
+  left: 0;
+}
+
+.sidebar-card {
+  height: 100%;
+  border-radius: 30px !important;
+  overflow-y: auto;
+}
+
+/* Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.sidebar-overlay.show {
+  display: block;
+}
+
+/* Toggle button */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #c9c9c9;
+  color: white;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1030;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.sidebar-toggler:focus {
+  box-shadow: 0 0 0 3px #848383;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-toggle:hover {
+  box-shadow: 0 0 0 3px #848383;
+}
+
+/* Desktop view */
+@media (min-width: 769px) {
+  .sidebar-wrapper {
+    position: sticky;
+    top: 80px; /* Sesuaikan dengan tinggi navbar Anda */
+    left: 0;
+    width: auto;
+    height: fit-content;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    align-self: flex-start; /* Penting untuk flexbox */
+  }
+
+  .sidebar-toggle {
+    display: none !important;
+  }
+
+  .sidebar-wrapper::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sidebar-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  /* Pastikan card mengisi wrapper */
+  .sidebar-card {
+    height: auto;
+    border-radius: 10px !important; /* Opsional: beri radius */
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  .col-md-8.col-lg-10 {
+    width: 100%;
+  }
+
+  .sidebar-wrapper {
     top: 0;
     left: -280px;
     width: 280px;
     height: 100vh;
-    z-index: 1050;
-    transition: left 0.3s ease-in-out;
-  }
-
-  .sidebar-wrapper.show {
-    left: 0;
-  }
-
-  .sidebar-card {
-    height: 100%;
-    border-radius: 0 !important;
+    padding-top: 80px; /* Beri padding-top konten sidebar */
+    box-sizing: border-box;
+    max-height: calc(100vh - 100px);
     overflow-y: auto;
   }
 
-  /* Overlay */
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1040;
-    transition: opacity 0.3s ease-in-out;
+  /* Konten sidebar di-scroll */
+  .sidebar-card {
+    height: 100%;
+    overflow-y: auto;
   }
 
-  .sidebar-overlay.show {
-    display: block;
+  /* Pastikan konten pertama tidak ketimpa padding */
+  .sidebar-card .card-body:first-child {
+    padding-top: 20px;
   }
+}
 
-  /* Toggle button */
-  .sidebar-toggle {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #c9c9c9;
-    color: white;
-    border: none;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 1030;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-  }
+/* Prevent body scroll when sidebar open on mobile */
+body.sidebar-open {
+  overflow: hidden;
+}
 
-  .sidebar-toggler:focus {
-    box-shadow: 0 0 0 3px #848383;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  }
-
-  .sidebar-toggle:hover {
-    box-shadow: 0 0 0 3px #848383;
-  }
-
-  /* Desktop view */
-  @media (min-width: 769px) {
-    .sidebar-wrapper {
-      position: relative;
-      left: 0;
-      width: auto;
-      height: auto;
-    }
-
-    .sidebar-toggle {
-      display: none !important;
-    }
-
-    .sidebar-overlay {
-      display: none !important;
-    }
-  }
-
-  /* Mobile view */
-  @media (max-width: 768px) {
-    .sidebar-toggle {
-      display: flex;
-    }
-
-    .col-md-9.col-lg-10 {
-      width: 100%;
-    }
-  }
-
-  /* Prevent body scroll when sidebar open on mobile */
-  body.sidebar-open {
-    overflow: hidden;
-  }
-
-  /* Hover effect */
-  .list-group-item-action:hover {
-    background-color: #f8f9fa;
-    border-left: 3px solid #222222 !important;
-    padding-left: 18px !important;
-    transition: all 0.3s;
-  }
+/* Hover effect */
+.list-group-item-action:hover {
+  background-color: #f8f9fa;
+  border-left: 3px solid #222222 !important;
+  padding-left: 18px !important;
+  transition: all 0.3s;
+}
