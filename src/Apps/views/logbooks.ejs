@@ -1,6 +1,57 @@
 <link rel="stylesheet" href="css/logs.style.css">
 
-<div class="row g-4">
+<div class="col-lg-8">
+  <form action="" class="mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+          <span class="fw-semibold">
+            <span class="material-symbols-outlined me-1 align-middle">sort</span>
+            Sort by:
+          </span>
+
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sortBy" id="sortDefault" value="default" <%= activeSort === "default" ? "checked" : "" %>>
+            <label class="form-check-label" for="sortDefault">
+              <span class="material-symbols-outlined me-1 align-middle" style="font-size: 16px;">checklist</span>
+              Default
+            </label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sortBy" id="sortLatestPosted" value="latest" <%= activeSort === "latest" ? "checked" : "" %>>
+            <label class="form-check-label" for="sortLatestPosted">
+              <span class="material-symbols-outlined me-1 align-middle" style="font-size: 16px;">schedule</span>
+              Latest
+            </label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sortBy" id="sortOldestPosted" value="oldest" <%= activeSort === "oldest" ? "checked" : "" %>>
+            <label class="form-check-label" for="sortOldestPosted">
+              <span class="material-symbols-outlined me-1 align-middle" style="font-size: 16px;">history</span>
+              Oldest
+            </label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sortBy" id="sortLatestUpdated" value="updated" <%= activeSort === "updated" ? "checked" : "" %>>
+            <label class="form-check-label" for="sortLatestUpdated">
+              <span class="material-symbols-outlined me-1 align-middle" style="font-size: 16px;">update</span>
+              Updated
+            </label>
+          </div>
+
+          <!-- <button type="submit" class="btn btn-sm btn-primary ms-auto">
+            <span class="material-symbols-outlined me-1 align-middle" style="font-size: 16px;">arrow_forward</span>
+            Apply
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="row g-4 mt-2">
   <% row.forEach(function(log) { %>
   <div class="col-lg-4 col-md-6">
     <a href="/logbooks/<%= log.slug_log %>" class="card-link">
@@ -62,3 +113,14 @@
     background-color: #FCF8F8;
   }
 </style>
+
+<script>
+  const radios = document.querySelectorAll("input[name='sortBy']")
+
+  radios.forEach(radio => {
+    radio.addEventListener("change", () => {
+      const value = event.target.value
+      window.location.href = "/logbooks?sort=" + value
+    })
+  })
+</script>

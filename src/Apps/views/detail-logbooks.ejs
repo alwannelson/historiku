@@ -1,22 +1,117 @@
-<div class="container">
+<div class="container detail-log">
   <div class="col">
+    <style>
+      .back-button {
+        position: fixed;
+        left: 20px;
+        /* bottom: 100px; */
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .back-button.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .back-button:hover {
+        background-color: #5a6268;
+        transform: scale(1.1);
+        color: white;
+      }
+/* 
+      @media (min-width: 1573px) {
+        .back-button {
+          left: 160px;
+        }
+      }
+
+      @media (min-width: 1616px) {
+        .back-button {
+          left: 170px;
+        }
+      } */
+    </style>
+
+    <a href="/logbooks" class="back-button" id="backButton">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+
+    <script>
+      window.addEventListener('scroll', function() {
+        const backButton = document.getElementById('backButton');
+        if (window.scrollY > 30) {
+          backButton.classList.add('visible');
+        } else {
+          backButton.classList.remove('visible');
+        }
+      });
+    </script>
     <h1 class="text-center">
       <%= result.title_log %>
     </h1>
-    <p class="mt-4">
-      <%= new Date(result.posted_at).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric', 
-                  year: 'numeric' 
-        }) %>
-    </p>
+    <table class="mt-5">
+      <div class="">
+        <tr>
+          <td>
+            <p>Posted </p>
+          </td>
+          <td>
+            <p>:</p>
+          </td>
+          <td>
+            <p>
+              <%= new Date(result.posted_at).toLocaleDateString('en-US', {month: 'short',day: 'numeric',year: 'numeric',hour: '2-digit'}) %>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>Updated </p>
+          </td>
+          <td>
+            <p>:</p>
+          </td>
+          <td>
+            <p>
+              <% const a = new Date(result.posted_at).toLocaleDateString('en-US', {month: 'short',day: 'numeric',year: 'numeric',hour: '2-digit'})
+                  const b = new Date(result.updated_at).toLocaleDateString('en-US', {month: 'short',day: 'numeric',year: 'numeric',hour: '2-digit'})
+              %>
+              <% if (a === b) { %>
+              -
+              <% } else { %>
+              <%= b %>
+              <% } %>
+            </p>
+          </td>
+        </tr>
+      </div>
+    </table>
     <hr>
-    <div class="fs-5 mt-4 text-justify">
-      <%- result.body_log %>
+    <div class="fs-5 mt-4 text-justify x">
+      <p><%- result.body_log %></p>
     </div>
   </div>
   <div class="mt-5">
-    <hr>
-    <b style="cursor: pointer;"><%= result.tags %></b>
+    <hr> <b style="cursor: pointer;">
+      <%= result.tags %>
+    </b>
   </div>
 </div>
+<style>
+  .x {
+    font-family: "Nokora", serif;
+  }
+</style>

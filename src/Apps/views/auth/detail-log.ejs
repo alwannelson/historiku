@@ -1,9 +1,48 @@
-<div class="container">
+<div class="container detail-log">
   <div class="col">
+    <a href="/me/logs/edit/<%= result.slug_log %>" class="btn btn-outline-warning btn-sm"><span class="material-symbols-outlined text-dark">edit</span></a>
     <h1 class="text-center">
       <%= result.title_log %>
     </h1>
-    <p class="mt-4"><%= postedAt %></p>
+    <div class="d-flex mb-3 mt-4">
+      <table class="mt-5">
+        <div class="">
+          <tr>
+            <td>
+              <p>Posted </p>
+            </td>
+            <td>
+              <p>:</p>
+            </td>
+            <td>
+              <p>
+                <%= new Date(result.posted_at).toLocaleDateString('en-US', {month: 'short',day: 'numeric',year: 'numeric',hour: '2-digit'}) %>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>Updated </p>
+            </td>
+            <td>
+              <p>:</p>
+            </td>
+            <td>
+              <p>
+                <% const a = new Date(result.posted_at).toLocaleDateString('en-US', {month: 'short',day: 'numeric',year: 'numeric',hour: '2-digit'})
+                  const b = new Date(result.updated_at).toLocaleDateString('en-US', {month: 'short',day: 'numeric',year: 'numeric',hour: '2-digit'})
+              %>
+                <% if (a === b) { %>
+                -
+                <% } else { %>
+                <%= b %>
+                <% } %>
+              </p>
+            </td>
+          </tr>
+        </div>
+      </table>
+    </div>
     <hr>
     <div class="fs-5 mt-4">
       <%- result.body_log %>

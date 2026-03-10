@@ -19,8 +19,19 @@ let postedAt = ''
 
 
 exports.getLogs = async (req, res) => {
+    const sort = req.query.sort || 'default'
+
+    const sortMap = {
+        default: 'id_log DESC',
+        latest: 'posted_at DESC',
+        oldest: 'posted_at ASC',
+        updated: 'updated_at DESC'
+    }
+
+    const orderBy = sortMap[sort] || sortMap.default
+
     const [data] = await db.execute(
-        'SELECT * FROM tbl_logs ORDER BY id_log DESC'
+        `SELECT * FROM tbl_logs ORDER BY ${orderBy} LIMIT 20`
     )
 
     if (data.length > 0) {
@@ -33,7 +44,8 @@ exports.getLogs = async (req, res) => {
         tokenDesc: req.session.tokenDesc,
         ownerName: req.session.ownerName,
         data,
-        postedAt
+        postedAt,
+        activeSort: sort
     })
 }
 
@@ -115,7 +127,6 @@ exports.getLogBySlug = async (req, res) => {
             'SELECT * FROM tbl_logs WHERE slug_log = ?',
             [slug]
         )
-        postedAt = formatDate(result.posted_at)
 
         if (!result) {
             return res.status(404).render('errors/404', {
@@ -129,7 +140,7 @@ exports.getLogBySlug = async (req, res) => {
             title: `${result.title_log}`,
             layout: 'layouts/auth-layout',
             result,
-            postedAt
+            postedAt,
         })
     } catch (error) {
         console.log(error)
@@ -166,6 +177,57 @@ exports.deleteLogBySlug = async (req, res) => {
         return res.status(500).render('errors/500', {
             title: '500 | Server Error',
             layout: 'layout/main-layout'
+        })
+    }
+}
+
+exports.getEditLogBySlug = async (req, res) => {
+    try {
+        const { slug } = req.params
+
+        const [[result]] = await db.execute(
+            'SELECT * FROM tbl_logs WHERE slug_log = ?',
+            [slug]
+        )
+
+        res.status(200).render('auth/edit-log', {
+            title: `Edit: ${result.title_log}`,
+            layout: 'layouts/auth-layout',
+            result
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).render('errors/500', {
+            title: '500 | Server Error',
+            layout: 'layouts/main-layout'
+        })
+    }
+}
+
+exports.postLogBySlug = async (req, res) => {
+    try {
+        const { slug } = req.params
+        const { title, newSlug, tags, body } = req.body
+
+        if (!title || !newSlug || !body || !tags) {
+            return res.status(400).render('errors/400', {
+                title: '400 | Bad Request',
+                layout: 'layouts/main-layout'
+            })
+        }
+
+        const newDate = new Date()
+        const [result] = await db.execute(
+            'UPDATE tbl_logs SET title_log = ?, slug_log = ?,  body_log = ?, tags = ?, updated_at = ? WHERE slug_log = ?',
+            [title, newSlug, body, tags, newDate, slug]
+        )
+
+        res.status(200).redirect(`/me/logs/${newSlug}`)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            status: 'err',
+            messages: 'error on server side'
         })
     }
 }
