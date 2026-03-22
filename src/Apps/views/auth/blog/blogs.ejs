@@ -1,0 +1,322 @@
+<div class="row g-4">
+  <% blogs.forEach(function(post) { %>
+  <div class="col-lg-4 col-md-6"> 
+    <a href="/me/blogs/<%= post.slug_blog %>" class="blog-card-link">
+      <div class="card blog-card h-100 shadow-sm hover-card">
+        <div class="card-body d-flex flex-column">
+          <!-- Header dengan Title dan Date -->
+          <div class="d-flex flex-column align-items-start">
+            <h6 class="card-title fw-bold mb-0 title-ellipsis" style="max-width: 70%;">
+              <% const shortTitle = post.title_blog.length > 45 ? post.title_blog.substring(0, 45) + '...' : post.title_blog; %>
+              <%= shortTitle %>
+            </h6> <br>
+          </div> <!-- Author Info -->
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="author-avatar">
+              <%= post.author_blog ? post.author_blog.charAt(0).toUpperCase() : 'A' %>
+            </div>
+            <div> <small class="fw-semibold d-block author-name">
+                <%= post.author_blog || 'Anonymous' %>
+              </small> </div>
+          </div> <!-- Tags -->
+          <% if (post.tags && post.tags.length > 0) { %>
+          <div class="mb-3 tags-wrapper">
+            <% const tagsArray = post.tags.split(',');tagsArray.slice(0, 2).forEach(function(tag) {const shortTag = tag.trim().length > 15 ? tag.trim().substring(0, 15) + '...' : tag.trim(); %>
+            <span class="badge bg-light text-dark me-1 tag-badge">
+              #
+              <%= shortTag %>
+            </span>
+            <% }) %>
+            <% if (tagsArray.length > 2) { %>
+            <span class="badge bg-light text-secondary"> +
+              <%= tagsArray.length - 2 %>
+            </span>
+            <% } %>
+          </div>
+          <% } %>
+          <!-- Content Preview dengan line clamp 2 baris -->
+          <div class="preview-wrapper mb-3">
+            <% const plainText = post.body_blog ? post.body_blog.replace(/<[^>]*>/g, '') : ''; %>
+            <p class="card-text small text-secondary preview-text line-clamp-2">
+              <%= plainText || 'No content available' %>
+            </p>
+          </div> <!-- Spacer untuk push footer ke bawah -->
+          <div class="flex-grow-1"></div> <!-- Footer -->
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-auto">
+            <small class="text-secondary date-text flex-shrink-0">
+              <%= new Date(post.posted_at).toLocaleDateString('en-US', {month: 'short',day: 'numeric', year: 'numeric'}) %>
+            </small>
+            <button type="button" class="btn btn-sm btn-outline-danger border-0 delete-btn" onclick="event.preventDefault(); event.stopPropagation(); deletePost('<%= post.slug %>')" aria-label="Delete"> <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </a> </div>
+  <% }) %>
+</div>
+
+<style>
+  /* Blog Card Styles - With Min & Max Height */
+  .blog-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .blog-card {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    min-height: 250px;
+    max-height: 420px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Untuk memastikan konten tidak overflow */
+  .blog-card .card-body {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    flex: 1;
+  }
+
+  /* Custom scrollbar untuk webkit */
+  .blog-card .card-body::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .blog-card .card-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .blog-card .card-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+
+  .blog-card .card-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  /* Title ellipsis untuk satu baris */
+  .title-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Line clamp untuk 2 baris - Webkit based */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+
+  /* Alternative untuk browser lain */
+  .preview-text {
+    margin: 0;
+    line-height: 1.5;
+    max-height: 3em;
+    /* 2 lines * line-height */
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Fallback untuk browser yang tidak support line-clamp */
+  @supports not (-webkit-line-clamp: 2) {
+    .preview-text {
+      display: block;
+      max-height: 3em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+    }
+  }
+
+  /* Tags wrapper untuk mencegah overflow */
+  .tags-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: thin;
+  }
+
+  .tags-wrapper::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .tags-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .tags-wrapper::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+
+  /* Hover Effects */
+  .hover-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(13, 110, 253, 0.2);
+    box-shadow: 0 8px 16px -6px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .card-title {
+    color: grey;
+  }
+
+  .hover-card:hover .card-title {
+    color: #212529;
+    transition: color 0.2s ease;
+  }
+
+  .author-avatar {
+    width: 28px;
+    height: 28px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .hover-card:hover .author-avatar {
+    background-color: #212529;
+    color: white;
+  }
+
+  .author-name {
+    position: relative;
+    display: inline-block;
+    color: grey;
+    text-decoration: none;
+    /* Removes the default underline */
+    padding-bottom: 5px;
+  }
+
+  .author-name::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    /* Underline thickness */
+    bottom: 0;
+    left: 0;
+    background-color: #212529;
+    /* Underline color */
+
+    /* Initial state: hidden */
+    transform: scaleX(0);
+    /* Sets the origin for the scaling effect (starts from the left) */
+    transform-origin: bottom left;
+    /* Smooth transition for the transform property */
+    transition: transform 0.90s ease-out;
+  }
+
+  .hover-card:hover .author-name {
+    color: #212529;
+  }
+
+  .hover-card:hover .author-name::after{
+    color: #212529;
+    transform: scaleX(0);
+    transition: transform 0.60s ease;
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
+  .hover-card:hover .date-text {
+    color: #212529 !important;
+    transition: color 0.2s ease;
+  }
+
+  .tag-badge {
+    transition: all 0.2s ease;
+    font-weight: normal;
+    padding: 0.25rem 0.6rem;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .hover-card:hover .tag-badge {
+    background-color: #212529 !important;
+    color: #ffffff !important;
+  }
+
+  .hover-card:hover .preview-text {
+    color: #212529 !important;
+    transition: color 0.2s ease;
+  }
+
+  .read-more {
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  .hover-card:hover .read-more .material-symbols-outlined {
+    transform: translateX(2px);
+    transition: transform 0.2s ease;
+  }
+
+  .delete-btn {
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .hover-card:hover .delete-btn {
+    opacity: 1;
+  }
+
+  .delete-btn:hover {
+    opacity: 1 !important;
+    transform: scale(1.05);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .blog-card {
+      min-height: 250px;
+      max-height: 400px;
+    }
+
+    .d-flex.justify-content-between.align-items-start {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card-title {
+      max-width: 100% !important;
+    }
+
+    .title-ellipsis {
+      white-space: normal;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+</style>
+
+<script>
+  function deletePost(slug) {
+    if (confirm('Are you sure you want to delete this post?')) {
+      // Implement your delete logic here
+      console.log('Delete post:', slug);
+    }
+  }
+</script>

@@ -13,7 +13,11 @@ app.set('views', path.join(__dirname, './src/Apps/views'))
 
 app.use(expressLayouts)
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({
+    limit: '50mb',
+    extended: true,
+    parameterLimit: 100000
+}))
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -28,6 +32,7 @@ app.use((req, res, next) => {
     res.locals.ownerName = req.session.ownerName || null;
     res.locals.tokenDesc = req.session.tokenDesc || null;
     res.locals.amountLogs = req.session.amountLogs || null;
+    res.locals.amountBlogs = req.session.amountBlogs || null;
     res.locals.login = req.session.login || false;
     res.locals.user = req.session.user ? req.session.user : null;
 

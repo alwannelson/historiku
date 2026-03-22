@@ -58,7 +58,7 @@
     <!-- Title Field -->
     <div class="mb-3">
       <label for="title" class="form-label fw-bold">Title <span class="text-danger">*</span></label>
-      <input type="text" class="form-control" id="title" name="title" placeholder="Enter post title" required>
+      <input type="text" class="form-control o" id="title" name="title" placeholder="Enter post title" required>
       <div class="error-feedback" id="titleError">Title is required</div>
     </div>
 
@@ -115,7 +115,13 @@
     const mysqlDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     document.getElementById('posted_at').value = mysqlDateTime;
 
+    if (typeof window.ImageResize === 'undefined') {
+      console.error('ImageResize module tidak ditemukan!');
+      return;
+    }
+
     // Initialize Quill
+    Quill.register('modules/imageResize', window.ImageResize.default)
     const quill = new Quill('#editor-container', {
       theme: 'snow',
       placeholder: 'Write your post content here...',
@@ -140,9 +146,22 @@
           }],
           ['link', 'image', 'code-block'],
           ['clean']
-        ]
+        ],
+        imageResize: {
+          displaySize: true,
+          modules: ['Resize', 'DisplaySize'],
+          handleStyles: {
+            backgroundColor: '#0d6efd',
+            border: '2px solid white',
+            width: '12px',
+            height: '12px'
+          }
+        }
       }
     });
+
+    const resizeModule = quill.getModule('imageResize');
+    console.log('Resize module status:', resizeModule ? 'OK' : 'GAGAL');
 
     // Get elements
     const titleInput = document.getElementById('title');

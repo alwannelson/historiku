@@ -3,7 +3,7 @@
     max-width: 1000px;
     margin: 50px auto;
     padding: 30px;
-    background: white;
+    background-color: snow;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   }
@@ -42,6 +42,11 @@
     margin-top: 0.25rem;
   }
 
+  .author {
+    color: #6c757d;
+    margin-top: 0.25rem;
+  }
+
   /* Character count */
   .char-count {
     font-size: 0.875rem;
@@ -52,13 +57,14 @@
 </style>
 
 <div class="form-container">
-  <h2 class="mb-4">Edit: <%= result.title_log %></h2>
+  <h2 class="mb-4">New BLog</h2>
 
-  <form action="/me/logs/edit/<%= result.slug_log %>" method="POST" id="postForm">
+  <form action="/me/blogs/new" method="POST" id="postForm">
     <!-- Title Field -->
     <div class="mb-3">
       <label for="title" class="form-label fw-bold">Title <span class="text-danger">*</span></label>
-      <input type="text" class="form-control" id="title" name="title" placeholder="Enter post title" value="<%= result.title_log %>" required>
+      <input type="text" class="form-control" id="title" name="title" placeholder="Enter post title" required>
+      <div class="slug-preview" id="titleCount"></div>
       <div class="error-feedback" id="titleError">Title is required</div>
     </div>
 
@@ -66,22 +72,29 @@
     <div class="mb-3">
       <label for="slug" class="form-label fw-bold">Slug</label>
       <div class="input-group">
-        <span class="input-group-text">/me/logs/</span>
-        <input type="text" class="form-control" value="<%= result.slug_log %>" id="slug" name="newSlug" placeholder="contoh-slug-yang-benar" pattern="[a-z0-9-]+" title="Only lowercase letters, numbers, and hyphens allowed">
+        <span class="input-group-text">/blogs/</span>
+        <input type="text" class="form-control" id="slug" name="slug" placeholder="contoh-slug-yang-benar" pattern="[a-z0-9-]+" title="Only lowercase letters, numbers, and hyphens allowed">
       </div>
       <div class="slug-preview" id="slugPreview"></div>
+      <div class="slug-preview" id="slugCount"></div>
       <div class="error-feedback" id="slugError">Slug can only contain lowercase letters, numbers, and hyphens (no spaces)</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="tags" class="form-label fw-bold">Author</label>
+      <input type="text" class="form-control" id="author" name="author" placeholder="Author's name">
+      <div class="author"><small>Default author's name is <b>someone</b></small></div>
     </div>
 
     <!-- Tags Field -->
     <div class="mb-3">
       <label for="tags" class="form-label fw-bold">Tags</label>
-      <input type="text" class="form-control" value="<%= result.tags %>" id="tags" name="tags" placeholder="#tags, #tagar, #hastag, #contoh">
+      <input type="text" class="form-control" id="tags" name="tags" placeholder="#tags, #tagar, #hastag, #contoh">
     </div>
 
     <!-- Quill Editor Container -->
     <div class="mb-3">
-      <label class="form-label fw-bold">Content <span class="text-danger">*</span></label>
+      <label class="form-label fw-bold">Content</label>
       <div id="editor-container"></div>
       <!-- Hidden textarea untuk menyimpan value Quill -->
       <textarea name="body" id="body" style="display:none;"></textarea>
@@ -95,14 +108,10 @@
     <!-- Submit Button -->
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
       <button type="button" class="btn btn-secondary me-md-2" onclick="history.back()">Cancel</button>
-      <button type="submit" class="btn btn-warning">Edit Log</button>
+      <button type="submit" class="btn btn-primary">New Blog</button>
     </div>
   </form>
 </div>
-
-<script id="initial-data" type="application/json">
-  <%- JSON.stringify(result.body_log) %>
-</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -119,19 +128,16 @@
     const mysqlDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     document.getElementById('posted_at').value = mysqlDateTime;
 
-    // Get elements
-    const titleInput = document.getElementById('title');
-    const slugInput = document.getElementById('slug');
-    const slugPreview = document.getElementById('slugPreview');
-    const form = document.getElementById('postForm');
-    const bodyTextarea = document.getElementById('body');
-    const charCount = document.getElementById('charCount');
+    if (typeof window.ImageResize === 'undefined') {
+      console.error('ImageResize module tidak ditemukan!');
+      return;
+    }
 
     // Initialize Quill
     Quill.register('modules/imageResize', window.ImageResize.default)
     const quill = new Quill('#editor-container', {
       theme: 'snow',
-      placeholder: 'Write your post content here...',
+      placeholder: 'write something here..',
       modules: {
         toolbar: [
           [{
@@ -167,41 +173,16 @@
       }
     });
 
-    function escapeQuillContent(content) {
-      return content
-        .replace(/`/g, '\\`') // Escape backtick
-        .replace(/\\/g, '\\\\') // Escape backslash
-        .replace(/\$/g, '\\$') // Escape dollar (untuk template literal)
-        .replace(/\n/g, '\\n'); // Escape newline
-    }
-    // PERBAIKAN: Mengisi Quill dengan konten dari database
-    const initialContent = JSON.parse(
-      document.getElementById('initial-data').textContent
-    )
+    const resizeModule = quill.getModule('imageResize');
+    console.log('Resize module status:', resizeModule ? 'OK' : 'GAGAL');
 
-    // Fungsi untuk mengisi Quill dengan konten
-    function setQuillContent(content) {
-      if (content && content.trim() !== '') {
-        try {
-          // Coba set sebagai HTML
-          quill.root.innerHTML = content;
-
-          // Update textarea dengan konten
-          bodyTextarea.value = content;
-        } catch (e) {
-          console.error('Error mengisi Quill:', e);
-          // Fallback: set sebagai teks biasa
-          quill.setText(content.replace(/<[^>]*>/g, ''));
-        }
-      } else {
-      }
-
-      // Update character count
-      updateCharCount();
-    }
-
-    // Panggil fungsi untuk mengisi Quill
-    setQuillContent(initialContent);
+    // Get elements
+    const titleInput = document.getElementById('title');
+    const slugInput = document.getElementById('slug');
+    const slugPreview = document.getElementById('slugPreview');
+    const form = document.getElementById('postForm');
+    const bodyTextarea = document.getElementById('body');
+    const charCount = document.getElementById('charCount');
 
     // Function to generate slug from title
     function generateSlug(text) {
@@ -213,6 +194,7 @@
         .replace(/^-+|-+$/g, '');
     }
 
+    // Update slug preview
     function updateSlugPreview() {
       const title = titleInput.value.trim();
       if (title) {
@@ -225,8 +207,7 @@
       }
     }
 
-
-    // Auto-generate slug when title changes (hanya jika slug kosong)
+    // Auto-generate slug when title changes
     titleInput.addEventListener('input', function() {
       if (!slugInput.value.trim()) {
         const generatedSlug = generateSlug(this.value);
@@ -234,6 +215,8 @@
         slugInput.classList.remove('is-invalid');
       }
       updateSlugPreview();
+      updateSlugCount()
+      updateTitleCount()
     });
 
     // Validate slug format
@@ -243,13 +226,13 @@
 
       if (this.value.trim() && (!slugPattern.test(this.value) || hasSpace)) {
         this.classList.add('is-invalid');
-        document.getElementById('slugError').style.display = 'block';
       } else {
         this.classList.remove('is-invalid');
-        document.getElementById('slugError').style.display = 'none';
       }
 
       updateSlugPreview();
+      updateSlugCount()
+      updateTitleCount()
     });
 
     // Update character count
@@ -265,6 +248,50 @@
       }
     }
 
+    function updateSlugCount() {
+      const slugCount = document.getElementById('slugCount')
+      const slgInp = slugInput.value
+      const slugLength = slgInp.length
+      slugCount.textContent = `${slugLength} char${slugLength !== 1 ? 's' : ''} `
+
+      if (!slugLength) {
+        slugCount.style.display = 'none'
+      } else {
+        slugCount.style.display = 'block'
+      }
+
+      if (slugLength >= 1) {
+        slugCount.style.color = 'green'
+      }
+
+      if (slugLength > 250) {
+        slugCount.style.color = 'red'
+        slugCount.insertAdjacentHTML('beforeend', `|| that's too much!`)
+      } 
+    }
+
+    function updateTitleCount() {
+      const titleCount = document.getElementById('titleCount')
+      const titInp = titleInput.value
+      const titleLength = titInp.length
+      titleCount.textContent = `${titleLength} char${titleCount !== 1 ? 's' : ''} `
+
+      if (!titleLength) {
+        titleCount.style.display = 'none'
+      } else {
+        titleCount.style.display = 'block'
+      }
+
+      if (titleLength >= 1) {
+        titleCount.style.color = 'green'
+      }
+
+      if (titleLength > 250) {
+        titleCount.style.color = 'red'
+        titleCount.insertAdjacentHTML('beforeend', `|| that's too much!`)
+      }
+    }
+
     // Update hidden textarea when quill content changes
     quill.on('text-change', function() {
       const content = quill.root.innerHTML;
@@ -274,7 +301,6 @@
       // Remove invalid class if content exists
       if (quill.getText().trim().length > 0) {
         document.querySelector('#editor-container').classList.remove('is-invalid');
-        document.getElementById('bodyError').style.display = 'none';
       }
     });
 
@@ -287,11 +313,9 @@
       // Validate title
       if (!titleInput.value.trim()) {
         titleInput.classList.add('is-invalid');
-        document.getElementById('titleError').style.display = 'block';
         isValid = false;
       } else {
         titleInput.classList.remove('is-invalid');
-        document.getElementById('titleError').style.display = 'none';
       }
 
       // Validate body (Quill content)
@@ -311,11 +335,8 @@
 
       if (slugValue && (!slugPattern.test(slugValue) || /\s/.test(slugValue))) {
         slugInput.classList.add('is-invalid');
-        document.getElementById('slugError').style.display = 'block';
+        document.getElementById('slugError').style.display = 'block'
         isValid = false;
-      } else {
-        slugInput.classList.remove('is-invalid');
-        document.getElementById('slugError').style.display = 'none';
       }
 
       // If slug is empty, generate from title
@@ -329,7 +350,7 @@
         const mysqlDateTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
         document.getElementById('posted_at').value = mysqlDateTime;
 
-        // PASTIKAN: Konten tersimpan di textarea
+        // Pastikan content tersimpan di textarea
         bodyTextarea.value = quill.root.innerHTML;
 
         this.submit();
@@ -337,7 +358,6 @@
     });
 
     // Initial update
-    updateSlugPreview();
     updateCharCount();
   });
 </script>

@@ -1,29 +1,42 @@
 const express = require('express')
 const route = express.Router()
-const MainController = require('../controller/MainController')
-const AuthController = require('../controller/AuthController')
-const LogsController = require('../controller/LogsController')
-const LogBooksController = require('../controller/LogBooksController')
-const controller = {
+const MainController = require('../controllers/MainController')
+const AuthController = require('../controllers/AuthController')
+const LogsController = require('../controllers/LogsController')
+const LogBooksController = require('../controllers/LogBooksController')
+const BlogsController = require('../controllers/BlogsController')
+const controllers = {
     MainController,
     AuthController,
     LogsController,
-    LogBooksController
+    LogBooksController,
+    BlogsController
 }
 
-route.get   ('/', controller.MainController.getHome)
-route.get   ('/is_me', controller.AuthController.getIsMe)
-route.post  ('/is_me', controller.AuthController.postIsMe)
-route.get   ('/me', controller.AuthController.checkToken, controller.AuthController.getMe)
-route.get   ('/exit', controller.AuthController.getExit)
-route.get   ('/me/logs', controller.AuthController.checkToken, controller.LogsController.getLogs)
-route.get   ('/me/logs/new', controller.AuthController.checkToken, controller.LogsController.getNewLog)
-route.post  ('/me/logs/new', controller.AuthController.checkToken, controller.LogsController.postNewLog)
-route.get   ('/me/logs/:slug', controller.AuthController.checkToken, controller.LogsController.getLogBySlug)
-route.post  ('/me/logs/:slug', controller.AuthController.checkToken, controller.LogsController.deleteLogBySlug)
-route.get   ('/logbooks', controller.LogBooksController.getLogBooks)
-route.get   ('/logbooks/:slug', controller.LogBooksController.getLogBookBySlug)
-route.get   ('/me/logs/edit/:slug', controller.AuthController.checkToken, controller.LogsController.getEditLogBySlug)
-route.post  ('/me/logs/edit/:slug', controller.AuthController.checkToken, controller.LogsController.postLogBySlug)
+//R. Main
+route.get   ('/', controllers.MainController.getHome)
+route.get   ('/logbooks', controllers.LogBooksController.getLogBooks)
+route.get   ('/logbooks/:slug', controllers.LogBooksController.getLogBookBySlug)
+
+//R. Auth
+route.get   ('/is_me', controllers.AuthController.getIsMe)
+route.post  ('/is_me', controllers.AuthController.postIsMe)
+route.get   ('/me', controllers.AuthController.checkToken, controllers.AuthController.getMe)
+route.get   ('/exit', controllers.AuthController.getExit)
+
+//R. Logbooks
+route.get   ('/me/logs', controllers.AuthController.checkToken, controllers.LogsController.getLogs)
+route.get   ('/me/logs/new', controllers.AuthController.checkToken, controllers.LogsController.getNewLog)
+route.post  ('/me/logs/new', controllers.AuthController.checkToken, controllers.LogsController.postNewLog)
+route.get   ('/me/logs/:slug', controllers.AuthController.checkToken, controllers.LogsController.getLogBySlug)
+route.post  ('/me/logs/:slug', controllers.AuthController.checkToken, controllers.LogsController.deleteLogBySlug)
+route.get   ('/me/logs/edit/:slug', controllers.AuthController.checkToken, controllers.LogsController.getEditLogBySlug)
+route.post  ('/me/logs/edit/:slug', controllers.AuthController.checkToken, controllers.LogsController.postLogBySlug)
+
+//R. Blogs
+route.get   ('/me/blogs/new', controllers.AuthController.checkToken, controllers.BlogsController.getNewBlog)
+route.get   ('/me/blogs', controllers.AuthController.checkToken, controllers.BlogsController.getAllBlogs)
+route.post  ('/me/blogs/new', controllers.AuthController.checkToken, controllers.BlogsController.postNewBlog)
+route.get   ('/me/blogs/:slug', controllers.AuthController.checkToken, controllers.BlogsController.getBlogBySlug)
 
 module.exports = route

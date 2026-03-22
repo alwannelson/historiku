@@ -28,6 +28,12 @@ exports.postIsMe = async (req, res) => {
 
         const amountLogs = result[0].amount_logs
 
+        const [blogs] = await db.execute(
+            'SELECT COUNT(*) as amount_blogs FROM tbl_blogs'
+        )
+
+        const amountBlogs = blogs[0].amount_blogs
+
         if (!token) {
             req.flash("error", "PIN harus diisi");
             return res.status(400).redirect("/is_me");
@@ -49,7 +55,8 @@ exports.postIsMe = async (req, res) => {
                 (req.session.tokenId = rows[0].id_token),
                 (req.session.tokenDesc = rows[0].description_token),
                 (req.session.ownerName = rows[0].owner_name),
-                (req.session.amountLogs = amountLogs)
+                (req.session.amountLogs = amountLogs),
+                (req.session.amountBlogs = amountBlogs)
             );
 
             await db.execute(
